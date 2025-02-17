@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Wallet Connect</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@latest"></script>
+</head>
+<body>
+    <h1>Connect Your Wallet</h1>
+    <button onclick="connectMetaMask()">Connect MetaMask</button>
+    <button onclick="connectTonWallet()">Connect TON Wallet</button>
+    <button onclick="connectSolana()">Connect Solana</button><script>
+    // MetaMask Connection
+    async function connectMetaMask() {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                alert(`Connected: ${accounts[0]}`);
+            } catch (error) {
+                console.error(error);
+                alert("Failed to connect MetaMask");
+            }
+        } else {
+            alert("MetaMask is not installed");
+        }
+    }
+
+    // TON Wallet Connection
+    async function connectTonWallet() {
+        try {
+            const tonConnect = new TonConnect({ manifestUrl: "https://ton-connect.github.io/demo-dapp-with-backend/tonconnect-manifest.json" });
+            const wallets = await tonConnect.getWallets();
+            if (wallets.length > 0) {
+                await tonConnect.connect(wallets[0].universalLink);
+                alert("TON Wallet connected successfully");
+            } else {
+                alert("No TON wallets found");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Failed to connect TON Wallet");
+        }
+    }
+
+    // Solana Phantom Wallet Connection
+    async function connectSolana() {
+        if (window.solana && window.solana.isPhantom) {
+            try {
+                const response = await window.solana.connect();
+                alert(`Connected to Solana: ${response.publicKey.toString()}`);
+            } catch (error) {
+                console.error(error);
+                alert("Failed to connect Solana Phantom Wallet");
+            }
+        } else {
+            alert("Phantom Wallet is not installed");
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+
